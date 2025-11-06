@@ -20,8 +20,6 @@ public class Compilador extends javax.swing.JFrame {
         inicializar();
     }
     
-    
-    
     private void inicializar(){
         //Codigo para implementar el numero de linea
         NumeroLinea numerolinea = new NumeroLinea(jCode);
@@ -46,6 +44,8 @@ public class Compilador extends javax.swing.JFrame {
         
         });
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
