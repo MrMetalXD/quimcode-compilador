@@ -1,0 +1,22 @@
+#EJEMPLO 1
+
+elemento H peso 1g gramos estado gaseoso;
+elemento O peso 16g gramos estado gaseoso;
+
+compuesto H2O peso 18 gramos estado liquido;
+
+solucion AguaPura litros 1L estado liquido;
+
+reaccion Combustion_H2 H2(2) + O2(1) = H2O(2);
+
+principal
+
+  mostrar "Iniciando experimento...";
+
+  temperatura = medir_temp(AguaPura);
+
+  si(temperatura < 50C)
+      ejecutar_reaccion Combustion_H2;
+  fin_si
+
+fin_principal
