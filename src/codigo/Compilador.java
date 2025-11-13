@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.*;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,12 +25,16 @@ public class Compilador extends javax.swing.JFrame {
     private boolean cambiosSinGuardar = false;
     private boolean actualizandoTexto = false;
     public String rute="";
+    
+    //Variable para la imagen de fondo
+    FondoPanel fondo = new FondoPanel();
 
 
     /**
      * Creates new form VentanaPrincipal
      */
     public Compilador() {
+        this.setContentPane(fondo);
         initComponents();
         inicializar();
     }
@@ -158,11 +163,6 @@ public class Compilador extends javax.swing.JFrame {
                     // Mostrar el contenido del archivo .quim en el editor
                     jCode.setText(contenido.toString());
 
-                    javax.swing.JOptionPane.showMessageDialog(this,
-                        "Archivo .quim cargado correctamente:\n" + archivo.getAbsolutePath(),
-                     "Abrir archivo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                    rute = archivo.getAbsolutePath();
-
                 } catch (Exception e) {
                     javax.swing.JOptionPane.showMessageDialog(this, "Error al abrir el archivo: " + e.getMessage(),
                             "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -219,7 +219,7 @@ public class Compilador extends javax.swing.JFrame {
             ventana.setVisible(true);
 
             if (errores.length() == 0) {
-                jErrores.setText("Análisis léxico completado sin errores.");
+                jErrores.setText("ANALISIS LÉXICO COMPLETADO SIN ERRORES.");
             } else {
                 jErrores.setText(" Se encontraron errores léxicos:\n\n" + errores.toString());
             }
@@ -243,7 +243,7 @@ public class Compilador extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new FondoPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jCode = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -264,13 +264,14 @@ public class Compilador extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jPanel1.setBackground(new java.awt.Color(164, 234, 150));
+        jPanel1.setBackground(new java.awt.Color(30, 42, 56));
 
         jCode.setBorder(null);
         jCode.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
         jScrollPane1.setViewportView(jCode);
 
         jErrores.setBorder(null);
+        jErrores.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
         jErrores.setRequestFocusEnabled(false);
         jScrollPane2.setViewportView(jErrores);
 
@@ -477,5 +478,18 @@ public class Compilador extends javax.swing.JFrame {
     private javax.swing.JMenu menuCompilar;
     private javax.swing.JMenu menuTablaSimbolos;
     // End of variables declaration//GEN-END:variables
+    
+    class FondoPanel extends JPanel {
+        private Image imagen;
+        public void paint(Graphics g){
+            imagen = new ImageIcon(getClass().getResource("/IMAGENES/fondoQuimcode.png")).getImage();
+            g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
+            //Mostrar imagen de fondo
+            setOpaque(false);
+            //Dibujar todos los componentes del JFrame
+            super.paint(g);
+        }
+    }
+
 }
 
