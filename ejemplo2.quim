@@ -1,22 +1,29 @@
-#EJEMPLO 1
+# EJEMPLO - Mezcla de dos muestras
 
-elemento H peso 1g gramos estado gaseoso;
-elemento O peso 16g gramos estado gaseoso;
+elemento H;
+elemento O;
+compuesto H2O;
 
-compuesto H2O peso 18 gramos estado liquido;
-
-solucion AguaPura litros 1L estado liquido;
-
-reaccion Combustion_H2 H2(2) + O2(1) = H2O(2);
+solucion MuestraAcida  litros 0.05L estado liquido;
+solucion MuestraBasica litros 0.05L estado liquido;
+solucion MezclaFinal   litros 0L    estado liquido;
 
 principal
 
-  mostrar "Iniciando experimento...";
+    mostrar("Iniciando mezcla de muestras...");
 
-  temperatura = medir_temp(AguaPura);
+    # Agregamos partes de cada muestra a la mezcla final
+    agregar(MuestraAcida, 25ml);
+    agregar(MuestraBasica, 25ml);
+    mezclar(MezclaFinal);
 
-  si(temperatura < 50C)
-      ejecutar_reaccion Combustion_H2;
-  fin_si
+    # Evaluamos el pH de la mezcla
+    si (medir_ph(MezclaFinal) < 7)
+        mostrar("La mezcla es ácida");
+    sino_si (medir_ph(MezclaFinal) > 7)
+        mostrar("La mezcla es básica");
+    sino
+        mostrar("La mezcla es neutra");
+    fin_si
 
 fin_principal

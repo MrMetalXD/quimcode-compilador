@@ -1,12 +1,27 @@
-EXPERIMENTO ReaccionAgua
+# EJEMPLO 1 - Combustión del Hidrógeno
 
-ELEMENTO H = "Hidrogeno"
-ELEMENTO O = "Oxigeno"
+# --- Declaración de elementos ---
+elemento H  peso 1g  estado gaseoso;
+elemento O  peso 16g estado gaseoso;
 
-SI (temperatura < 100) {
-    COMBINAR(H, H, O)
-    IMPRIMIR("Se formó agua (H2O)")
-}
-FIN_SI
+# --- Declaración de compuestos ---
+compuesto H2   peso 2g   estado gaseoso;   # 2 átomos de H
+compuesto O2   peso 32g  estado gaseoso;   # 2 átomos de O
+compuesto H2O  peso 18g  estado liquido;
 
-FIN_EXPERIMENTO
+# --- Declaración de soluciones ---
+solucion AguaPura  litros 1L  estado liquido;
+
+# --- Definición de reacción ---
+reaccion Combustion_H2  H2(2) + O2(1) = H2O(2);
+
+# --- Bloque principal ---
+principal
+
+    mostrar("Iniciando experimento de combustión...");
+
+    si (medir_temp(AguaPura) < 50C)
+        ejecutar_reaccion(Combustion_H2);
+    fin_si
+
+fin_principal
