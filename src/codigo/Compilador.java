@@ -6,8 +6,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.*;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -31,7 +35,6 @@ public class Compilador extends javax.swing.JFrame {
     //Variable para la imagen de fondo
    // FondoPanel fondo = new FondoPanel();
 
-
     /**
      * Creates new form VentanaPrincipal
      */
@@ -39,16 +42,15 @@ public class Compilador extends javax.swing.JFrame {
       //  this.setContentPane(fondo);
         initComponents();
         inicializar();
+        this.setLocationRelativeTo(null);
     }
     
     private void inicializar(){
         //Codigo para implementar el numero de linea
         NumeroLinea numerolinea = new NumeroLinea(jCode);
-        numerolinea.setForeground(Color.WHITE);
         jScrollPane1.setRowHeaderView(numerolinea);
         jCode.setEditable(true);
-        
-        
+         
         jCode.getDocument().addDocumentListener(new DocumentListener(){
             @Override
             public void insertUpdate(DocumentEvent e){
@@ -68,40 +70,36 @@ public class Compilador extends javax.swing.JFrame {
         });
     }
     
-    
     public void GuardarArchivo(){
-        javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+        JFileChooser fileChooser = new javax.swing.JFileChooser();
         fileChooser.setDialogTitle("Guardar archivo .quim");
 
         // Filtro para archivos .quim
-        javax.swing.filechooser.FileNameExtensionFilter filter =
-        new javax.swing.filechooser.FileNameExtensionFilter("Archivos Quim (*.quim)", "quim");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos Quim (*.quim)", "quim");
         fileChooser.setFileFilter(filter);
 
         int seleccion = fileChooser.showSaveDialog(this);
 
-        if (seleccion == javax.swing.JFileChooser.APPROVE_OPTION) {
-            java.io.File archivo = fileChooser.getSelectedFile();
+        if (seleccion ==  JFileChooser.APPROVE_OPTION) {
+            File archivo = fileChooser.getSelectedFile();
         // Si el nombre no termina con .quim, se lo agregamos automáticamente
             if (!archivo.getName().toLowerCase().endsWith(".quim")) {
                 archivo = new java.io.File(archivo.getAbsolutePath() + ".quim");
             }
 
-            try (java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(archivo))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
                 //Obtener el contenido del jCode y escribirlo
                 writer.write(jCode.getText());
                 writer.flush();
                 
-                javax.swing.JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(this,
                     "Archivo guardado correctamente en:\n" + archivo.getAbsolutePath(),
-                "Guardar archivo",
-                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                "Guardar archivo",JOptionPane.INFORMATION_MESSAGE);
 
             } catch (Exception e) {
-                javax.swing.JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(this,
                 "Error al guardar el archivo: " + e.getMessage(),
-                "Error",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+                "Error",JOptionPane.ERROR_MESSAGE);
             }
        } 
     }
@@ -116,47 +114,48 @@ public class Compilador extends javax.swing.JFrame {
 
         //Si hay cambios sin guardar, preguntar al usuario
         if (cambiosSinGuardar) {
-            int opcion = javax.swing.JOptionPane.showConfirmDialog(this,
+            int opcion = JOptionPane.showConfirmDialog(this,
               "Tienes cambios sin guardar.\n¿Deseas guardarlos antes de crear un nuevo archivo?", "Guardar cambios",
-            javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE);
+            JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
             
-            if (opcion == javax.swing.JOptionPane.CANCEL_OPTION) {
+            if (opcion == JOptionPane.CANCEL_OPTION) {
                 return; // cancelar acción
-            } else if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+            } else if (opcion == JOptionPane.YES_OPTION) {
                 GuardarArchivo(); // Guardamos antes de limpiar
             }
         }
+        this.tablaDeSimbolosGlobal = null;
+        this.tablaDeFuncionesGlobal = null;
         // Limpiar el área y reiniciar el estado
         jCode.setText("");
         archivoActual = null;
-        cambiosSinGuardar = false;   
+        cambiosSinGuardar = false;
+        jErrores.setText("");
     }
     
     public void AbrirArchivo(){
-        javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+        JFileChooser fileChooser = new javax.swing.JFileChooser();
         fileChooser.setDialogTitle("Abrir archivo .quim");
 
         // 🔹 Solo archivos con extensión .quim
-        javax.swing.filechooser.FileNameExtensionFilter filter = 
-                new javax.swing.filechooser.FileNameExtensionFilter("Archivos Quim (*.quim)", "quim");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos Quim (*.quim)", "quim");
         fileChooser.setFileFilter(filter);
 
         int seleccion = fileChooser.showOpenDialog(this);
 
-        if (seleccion == javax.swing.JFileChooser.APPROVE_OPTION) {
-                java.io.File archivo = fileChooser.getSelectedFile();
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+                File archivo = fileChooser.getSelectedFile();
 
             // Validar la extensión manualmente
                 if (!archivo.getName().toLowerCase().endsWith(".quim")) {
-                    javax.swing.JOptionPane.showMessageDialog(this,
-
+                    JOptionPane.showMessageDialog(this,
                         "El archivo seleccionado no es compatible.\nDebe ser un archivo con extensión .quim",
                         "Archivo no compatible",
-                    javax.swing.JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.WARNING_MESSAGE);
                     return;
                 }
 
-                try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(archivo))) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
                     StringBuilder contenido = new StringBuilder();
                     String linea;
 
@@ -168,8 +167,8 @@ public class Compilador extends javax.swing.JFrame {
                     jCode.setText(contenido.toString());
 
                 } catch (Exception e) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Error al abrir el archivo: " + e.getMessage(),
-                            "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error al abrir el archivo: " + e.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -203,16 +202,36 @@ public class Compilador extends javax.swing.JFrame {
                 int linea = token.getLinea();
                 String lexema = token.getLexema();
                 String compLexico = token.getComponente();
+                
+                Object[] fila = new Object[3];
+                fila[0] = linea;
+                fila[1] = lexema;
+                fila[2] = compLexico;
+                
+                tokens.addRow(fila);
 
-                //Si el token pertenece a algún tipo de error, lo mandamos a jErrores
-                if(token.toString().startsWith("ERROR")){
-                    errores.append(String.format("Linea %d -> %s (%s)&%n",linea, lexema, token));
-                } else {
-                    tokens.addRow(new Object[]{ linea, lexema, compLexico});
+                if (compLexico != null && compLexico.startsWith("ERROR")) {
+                    String sugerencia = obtenerSugerenciaError(compLexico, lexema);
+                    errores.append(String.format("Línea %d -> \"%s\" (%s)%n",linea, lexema, compLexico ));
+
+                    if (sugerencia != null && !sugerencia.isEmpty()) {
+                        errores.append("   Sugerencia: ")
+                                .append(sugerencia)
+                                .append("\n\n");
+                    } else {
+                        errores.append("\n");
+                    }
                 }
             }
             this.tablaDeSimbolosGlobal = lexer.getTablaSimbolos();
             this.tablaDeFuncionesGlobal = lexer.getTablaFunciones();
+            
+            if (errores.length() > 0) {
+                jErrores.setText("Se encontraron errores léxicos:\n\n" + errores.toString());
+                return; // salimos
+            } else {
+                jErrores.setText("ANALISIS LEXICO COMPLETADO SIN ERRORES");
+            }
 
             // Mostrar los resultados en una ventana aparte
             JTable tablaTokens = new JTable(tokens);
@@ -224,18 +243,64 @@ public class Compilador extends javax.swing.JFrame {
             ventana.add(scroll, BorderLayout.CENTER);
             ventana.setVisible(true);
 
-            if (errores.length() == 0) {
-                jErrores.setText("ANALISIS LÉXICO COMPLETADO SIN ERRORES.");
-            } else {
-                jErrores.setText(" Se encontraron errores léxicos:\n\n" + errores.toString());
-            }  
         } catch (Exception e) {
              jErrores.setText("️ Error en el análisis léxico: " + e.getMessage());
             e.printStackTrace();
         }
     }
     
+    private String obtenerSugerenciaError(String compLex, String lexema) {
+        switch (compLex) {
+            case "ERROR_LEXICO":
+                // Regla: operador pegado a identificador, p.ej. +abc, -x1, =moles
+                return "Se detectó un operador pegado a un identificador. " +
+                       "Separa el operador del nombre, por ejemplo:\n" +
+                       "   \"" + lexema + "\"  ->  \"" + separarOperadorYIdentificador(lexema) + "\"";
+
+            case "ERROR_IDENTIFICADOR_INVALIDO":
+                // Casos: 12ba, _8dato, __, etc.
+                return "El identificador no cumple las reglas del lenguaje. " +
+                       "Asegúrate de que:\n" +
+                       "  - No comience con un dígito.\n" +
+                       "  - Si empieza con '_', lo siga una letra (no dígitos ni más '_').\n" +
+                       "Ejemplos válidos: nombre1, _variable, dato_2";
+
+            case "ERROR_IDENTIFICADOR_ES_PALABRA_RESERVADA":
+                return "Estás usando una palabra reservada como identificador. " +
+                       "Cambia el nombre agregando un prefijo o sufijo, por ejemplo:\n" +
+                       "   \"" + lexema + "\"  ->  \"" + lexema + "_id\"";
+
+            case "ERROR_CADENA_NO_CERRADA":
+                return "La cadena no está cerrada con comillas dobles. " +
+                       "Agrega la comilla de cierre al final, por ejemplo:\n" +
+                       "   \"" + lexema + "\"  ->  \"" + lexema + "\"\"";
+
+            case "ERROR_CARACTER_INVALIDO":
+                return "Hay un carácter que no forma parte del lenguaje definido. " +
+                       "Revisa si escribiste un símbolo extraño o un acento que no es válido. " +
+                       "Si no lo necesitas, elimínalo o sustitúyelo por un símbolo permitido.";
+
+            case "ERROR":
+            default:
+                return "Se encontró un símbolo no reconocido. " +
+                       "Verifica que la cadena esté bien escrito o elimínalo si no forma parte del lenguaje.";
+        }
+    }
+    
+    private String separarOperadorYIdentificador(String lexema) {
+        if (lexema == null || lexema.length() < 2) return lexema;
+
+        char c = lexema.charAt(0);
+        if ("+-*/=<>!&".indexOf(c) != -1) {
+            String resto = lexema.substring(1);
+            // si el resto parece un identificador, agregamos un espacio
+            return c + " " + resto;
+        }
+        return lexema;
+    }
+    
     private void VerTablaIdentificadores(){
+        
         // veremos si el análisis léxico ya se ejecutó
         if (this.tablaDeSimbolosGlobal == null) {
             JOptionPane.showMessageDialog(this, 
@@ -244,12 +309,19 @@ public class Compilador extends javax.swing.JFrame {
                 JOptionPane.ERROR_MESSAGE);
             return; // Detiene el método para evitar el crash
         }
+        
         // se hace en un Jtable
-        String[] columnas = {"Identificador", "Tipo", "Línea", "Columna", "Dir. Memoria"}; 
-        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(columnas, 0);
+        String[] columnas = {"#" , "Nombre", "Tipo", "Línea", "Columna", "Direccion Memoria"}; 
+        DefaultTableModel model = new DefaultTableModel(columnas, 0);
         //obtenemos el mapa de identificadores
-        java.util.Map<String, TablaSimbolos.EntradaIdentificador> identificadores = 
-            tablaDeSimbolosGlobal.getIdentificadores();
+        Map<String, TablaSimbolos.EntradaIdentificador> identificadores = tablaDeSimbolosGlobal.getIdentificadores();
+        
+        if(identificadores.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No se encontraron identificadores en el codigo fuente",
+                    "Tabla de simbolos vacia",JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        int contador = 1;
         //Llena el modelo con los datos
         for (TablaSimbolos.EntradaIdentificador entrada : identificadores.values()) {
             // Formateamos la dirección para que se vea bien
@@ -257,17 +329,18 @@ public class Compilador extends javax.swing.JFrame {
                                     ? "N/A" // Si es -1, muestra N/A
                                     : String.valueOf(entrada.getDireccionMemoria()); // Si no, muestra el número
             model.addRow(new Object[]{
+                contador++,
                 entrada.getNombre(),
                 entrada.getTipo(), 
                 entrada.getLinea(),
                 entrada.getColumna(),
-                dirMemoriaStr 
+                dirMemoriaStr
             });
         }
         //Crea y muestra la ventana (JDialog) con la tabla
-        javax.swing.JTable tablaGUI = new javax.swing.JTable(model);
-        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(tablaGUI);
-        javax.swing.JDialog dialogoTabla = new javax.swing.JDialog(this, "Tabla de Símbolos (Identificadores)", true);
+        JTable tablaGUI = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(tablaGUI);
+        JDialog dialogoTabla = new JDialog(this, "Tabla de Símbolos (Identificadores)", true);
         dialogoTabla.add(scrollPane);
         dialogoTabla.setSize(600, 400);
         dialogoTabla.setLocationRelativeTo(this); // Centra la ventana
@@ -277,21 +350,23 @@ public class Compilador extends javax.swing.JFrame {
     private void VerTablaFija() {
         // Preparamos el modelo para la JTable
         String[] columnas = {"Palabra Reservada"};
-        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(columnas, 0);
+        DefaultTableModel model = new DefaultTableModel(columnas, 0);
         //Obtiene la lista de palabras de la clase estática
-        java.util.Set<String> palabras = TablaPalabrasReservadas.getPalabrasReservadas();
+        Set<String> palabras = TablaPalabrasReservadas.getPalabrasReservadas();
         //Llena el modelo con los datos
+        
         for (String palabra : palabras) {
             model.addRow(new Object[]{ palabra });
         }
         //Ordena la tabla alfabéticamente
-        javax.swing.JTable tablaGUI = new javax.swing.JTable(model);
-        tablaGUI.setAutoCreateRowSorter(true); // <-- Esto la ordena
+        JTable tablaGUI = new javax.swing.JTable(model);
+        tablaGUI.setAutoCreateRowSorter(true); // Esto la ordena
+        
         //Crea y muestra la ventana (JDialog)
-        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(tablaGUI);
-        javax.swing.JDialog dialogoTabla = new javax.swing.JDialog(this, "Tabla Fija (Palabras Reservadas)", true);
+        JScrollPane scrollPane = new javax.swing.JScrollPane(tablaGUI);
+        JDialog dialogoTabla = new javax.swing.JDialog(this, "Tabla Fija (Palabras Reservadas)", true);
         dialogoTabla.add(scrollPane);
-        dialogoTabla.setSize(500, 350);
+        dialogoTabla.setSize(400, 600);
         dialogoTabla.setLocationRelativeTo(this);
         dialogoTabla.setVisible(true);
     }
@@ -307,9 +382,9 @@ public class Compilador extends javax.swing.JFrame {
         }
         //preparamos el modelo para la JTable
         String[] columnas = {"Función", "Línea", "Tipo Retorno", "Parámetros"};
-        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(columnas, 0);
+        DefaultTableModel model = new DefaultTableModel(columnas, 0);
         //Obtiene el mapa de funciones
-        java.util.Map<String, TablaFunciones.EntradaFuncion> funciones = 
+        Map<String, TablaFunciones.EntradaFuncion> funciones = 
             tablaDeFuncionesGlobal.getFunciones();
         //Llena el modelo con los datos
         for (TablaFunciones.EntradaFuncion entrada : funciones.values()) {
@@ -323,9 +398,9 @@ public class Compilador extends javax.swing.JFrame {
             });
         }
         //Crea y muestra la ventana (JDialog)
-        javax.swing.JTable tablaGUI = new javax.swing.JTable(model);
-        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(tablaGUI);
-        javax.swing.JDialog dialogoTabla = new javax.swing.JDialog(this, "Tabla de Funciones", true);
+        JTable tablaGUI = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(tablaGUI);
+        JDialog dialogoTabla = new JDialog(this, "Tabla de Funciones", true);
         dialogoTabla.add(scrollPane);
         dialogoTabla.setSize(600, 400);
         dialogoTabla.setLocationRelativeTo(this);
