@@ -1,48 +1,34 @@
 package codigo;
 
 import java.util.Arrays;
+import static java.util.Collections.*;
 import java.util.HashSet;
 import java.util.Set;
 
 /*"Tabla Fija"*/
 public class TablaPalabrasReservadas {
     private static final Set<String> PALABRAS_RESERVADAS = new HashSet<>(Arrays.asList(
-            "SI","SINO","FIN_SI",
-            "MIENTRAS","FIN_MIENTRAS",
-            "PARA","FIN_PARA","REPETIR","VECES","FIN_REPETIR",
-            "ESPERAR","FUNCION","RETORNAR","IMPRIMIR","LEER","ALEATORIO",
-            "EXPERIMENTO","FIN_EXPERIMENTO","BLOQUE","FIN_BLOQUE",
-            "IMPORTAR","PAQUETE","USAR","CONSTANTE","VARIABLE",
-            "ELEMENTO","COMPUESTO","MEZCLA","CANTIDAD","MOLES","GRAMOS",
-            "LITROS","ESTADO","SOLIDO","LIQUIDO","GAS","ACUOSO","PUREZA",
-            "CONCENTRACION","MOLARIDAD","CREAR","ELIMINAR","LIMPIAR","COMBINAR","AGREGAR","DISOLVER",
-            "PRECIPITAR","EVAPORAR","DESTILAR","FILTRAR","TITULAR",
-            "USAR_CATALIZADOR","AJUSTAR_TEMPERATURA","AJUSTAR_PRESION",
-            "AGITAR","CALENTAR","ENFRIAR","ANOTAR",
-            "GENERAR_REPORTE","EXPORTAR","GUARDAR","CARGAR",
-            "EXPLICAR_REACCION","ADVERTIR","RUBRICA","PUNTUACION",
-            "INFO","MASA_MOLAR","BALANCEAR","TIPO_REACCION",
-            "ENERGIA_REACCION","ENTALPIA","ENTROPIA","GIBBS",
-            "PREDICIR_PRODUCTO","EQUILIBRIO","PKA","PH","ESTEQUIOMETRIA",
-            "REACTIVO_LIMITANTE",
-            "NUMERO","CADENA","BOOLEANO","LISTA","MAPA",
-            "VERDADERO","FALSO","NULO"
+           "si", "sino", "sino_si","fin_si","mientras","hacer",
+            "principal", "fin_principal", "elemento", "compuesto","moles","peso",
+            "estado", "solido", "liquido", "litro", "gaseoso", "acuoso", "reaccion",
+            "agregar", "eliminar", "limpiar", "mezclar", "disolver", "precipitar","evaporar",
+            "destilar", "medir_ph", "medir_temp", "medir_presion", "agitar", "calentar",
+            "enfriar", "neutralizar", "balancear_reaccion", "ejecturar_reaccion", "mostrar","mostrar_info",
+            "enviar_alerta","imprimir"
     ));
     
-    /**
-     * Revisa si un lexema (convertido a mayúsculas) existe en la tabla fija.
-     * @param lexema El texto a revisar.
-     * @return true si es una palabra reservada, false en otro caso.
-     */
+    /*
+        Revisa si un lexema existe en la tabla fija
+        Se le pasa un parametro lexema que sera el lexema a revisar
+        retorna true si la palabra es reservada
+    */
     public static boolean esReservada(String lexema) {
-        if (lexema == null) return false;
-        return PALABRAS_RESERVADAS.contains(lexema.toUpperCase());
+        if(lexema == null) return false;
+        return PALABRAS_RESERVADAS.contains(lexema);
     }
-    /**
-     * Devuelve una vista de solo lectura del Set de palabras reservadas.
-     * @return un Set con las palabras.
-     */
-    public static java.util.Set<String> getPalabrasReservadas() {
-        return java.util.Collections.unmodifiableSet(PALABRAS_RESERVADAS);
+   
+    // Devuelve el conjunto de palabras reservadas para solo lectura
+    public static Set<String> getPalabrasReservadas() {
+        return unmodifiableSet(PALABRAS_RESERVADAS);
     }
 }

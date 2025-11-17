@@ -4,6 +4,7 @@
  */
 package codigo;
 import java.util.*;
+import static java.util.Collections.unmodifiableMap;
 
 /**
  * Esta es la "Tabla de Símbolos" para Identificadores (variables, elementos, etc.).
@@ -60,23 +61,44 @@ public class TablaSimbolos {
     
     private final Map<String, EntradaIdentificador> identificadores = new LinkedHashMap<>();
     
-    // <-- ¡YA BORRAMOS LAS PALABRAS RESERVADAS DE AQUÍ!
-
-    public Map<String, EntradaIdentificador> getIdentificadores() {
-        // Devolvemos una copia para que la GUI no pueda modificar la tabla original
-        return java.util.Collections.unmodifiableMap(identificadores);
+    // Contador para simular direcciones de memoria
+    private int siguienteDireccion = 1000;
+    
+    private int tamanoPorTipo(String tipo) {
+        switch(tipo){
+            case "elemento":
+            case "compuesto":
+            case "solucion":
+            default:
+                return 4; //bytes por defecto
+        }
     }
     
-    // <-- ¡YA BORRAMOS EL MÉTODO esReservada() DE AQUÍ!
+    public Map<String, EntradaIdentificador> getIdentificadores() {
+        // Devolvemos una copia para que la GUI no pueda modificar la tabla original
+        return unmodifiableMap(identificadores);
+    }
+    
     
     public void registrarIdentificador(String nombre, int linea, int columna) {
         if (nombre == null || nombre.isEmpty()) return;
         
-        // ¡BORRAMOS ESTA LÍNEA! -> if (esReservada(nombre)) return;
-        // Ya no es necesaria, porque el Lexer hace esta revisión ANTES de llamar este método.
-
         if (!identificadores.containsKey(nombre)) {
             identificadores.put(nombre, new EntradaIdentificador(nombre, linea, columna));
+        }
+    }
+    
+    public void asignarTipoyDireccion(String nombre, String tipo){
+        EntradaIdentificador entrada = identificadores.get(nombre);
+        if(entrada == null){
+            entrada = new EntradaIdentificador(nombre, -1, -1);
+            identificadores.put(nombre, entrada);
+        }
+        entrada.setTipo(tipo);
+        
+        if(entrada.getDireccionMemoria() == -1){
+            entrada.setDireccionMemoria(siguienteDireccion);
+            siguienteDireccion += tamanoPorTipo(tipo);
         }
     }
     
