@@ -6,8 +6,8 @@ package codigo;
 import java.util.*;
 
 /**
- *
- * @author alanc
+ * Esta es la "Tabla de Símbolos" para Identificadores (variables, elementos, etc.).
+ * NO incluye funciones ni palabras reservadas.
  */
 public class TablaSimbolos {
     public static class EntradaIdentificador {
@@ -52,6 +52,7 @@ public class TablaSimbolos {
             this.direccionMemoria = direccionMemoria;
         }
         
+        @Override
         public String toString(){
             return nombre + "(" + linea + ", " + columna + ")";
         }
@@ -59,51 +60,28 @@ public class TablaSimbolos {
     
     private final Map<String, EntradaIdentificador> identificadores = new LinkedHashMap<>();
     
-    private static final Set<String> PALABRAS_RESERVADAS = new HashSet<>(Arrays.asList("SI","SINO","FIN_SI",
-            "MIENTRAS","FIN_MIENTRAS",
-            "PARA","FIN_PARA","REPETIR","VECES","FIN_REPETIR",
-            "ESPERAR","FUNCION","RETORNAR","IMPRIMIR","LEER","ALEATORIO",
-            "EXPERIMENTO","FIN_EXPERIMENTO","BLOQUE","FIN_BLOQUE",
-            "IMPORTAR","PAQUETE","USAR","CONSTANTE","VARIABLE",
-            "ELEMENTO","COMPUESTO","MEZCLA","CANTIDAD","MOLES","GRAMOS",
-            "LITROS","ESTADO","SOLIDO","LIQUIDO","GAS","ACUOSO","PUREZA",
-            "CONCENTRACION","MOLARIDAD","CREAR","ELIMINAR","LIMPIAR","COMBINAR","AGREGAR","DISOLVER",
-            "PRECIPITAR","EVAPORAR","DESTILAR","FILTRAR","TITULAR",
-            "USAR_CATALIZADOR","AJUSTAR_TEMPERATURA","AJUSTAR_PRESION",
-            "AGITAR","CALENTAR","ENFRIAR","ANOTAR",
-            "GENERAR_REPORTE","EXPORTAR","GUARDAR","CARGAR",
-            "EXPLICAR_REACCION","ADVERTIR","RUBRICA","PUNTUACION",
-            "INFO","MASA_MOLAR","BALANCEAR","TIPO_REACCION",
-            "ENERGIA_REACCION","ENTALPIA","ENTROPIA","GIBBS",
-            "PREDICIR_PRODUCTO","EQUILIBRIO","PKA","PH","ESTEQUIOMETRIA",
-            "REACTIVO_LIMITANTE",
-            "NUMERO","CADENA","BOOLEANO","LISTA","MAPA",
-            "VERDADERO","FALSO","NULO"));
-    
+    // <-- ¡YA BORRAMOS LAS PALABRAS RESERVADAS DE AQUÍ!
+
     public Map<String, EntradaIdentificador> getIdentificadores() {
         // Devolvemos una copia para que la GUI no pueda modificar la tabla original
         return java.util.Collections.unmodifiableMap(identificadores);
     }
     
-    public boolean esReservada(String lexema) {
-        if (lexema == null) return false;
-        // si quieres que sea insensible a mayúsculas:
-        return PALABRAS_RESERVADAS.contains(lexema.toUpperCase());
-    }
+    // <-- ¡YA BORRAMOS EL MÉTODO esReservada() DE AQUÍ!
     
     public void registrarIdentificador(String nombre, int linea, int columna) {
         if (nombre == null || nombre.isEmpty()) return;
-        if (esReservada(nombre)) return; // por si acaso
+        
+        // ¡BORRAMOS ESTA LÍNEA! -> if (esReservada(nombre)) return;
+        // Ya no es necesaria, porque el Lexer hace esta revisión ANTES de llamar este método.
 
         if (!identificadores.containsKey(nombre)) {
             identificadores.put(nombre, new EntradaIdentificador(nombre, linea, columna));
         }
-        // Si quisieras llevar una lista de apariciones, aquí podrías ampliarlo,
-        // pero eso ya sería más de léxico.
     }
     
     public EntradaIdentificador buscar(String nombre) {
         return identificadores.get(nombre);
     }
-   
+    
 }

@@ -9,9 +9,14 @@ import static codigo.Tokens.*;
 
 %{
     private final TablaSimbolos tablaSimbolos = new TablaSimbolos();
-    
+    private final TablaFunciones tablaFunciones = new TablaFunciones();
+
     public TablaSimbolos getTablaSimbolos() {
         return this.tablaSimbolos;
+    }
+
+    public TablaFunciones getTablaFunciones() { 
+        return this.tablaFunciones;
     }
 
     private Tokens token(String lex, String comp, int li, int c){
@@ -127,11 +132,13 @@ LIT_NUMERICA = {NUMERO}({UNIDAD_MOL}|{UNIDAD_GRAMOS}|{UNIDAD_KG}|{UNIDAD_L}|{UNI
 {LIT_NUMERICA} { return token(yytext(),"LIT_NUMERICA",yyline,yycolumn); }
 {NUMERO} { return token(yytext(),"NUMERO",yyline,yycolumn); }
 
-  /* -------- Identificadores -------- */
+ /* -------- Identificadores -------- */
   {IDENTIFICADOR} {
-        if (tablaSimbolos.esReservada(yytext())){
+        // 1. Revisa la "Tabla Fija"
+        if (TablaPalabrasReservadas.esReservada(yytext())){
             return token(yytext(),"ERROR_IDENTIFICADOR_ES_PALABRA_RESERVADA",yyline,yycolumn);
         } else {
+            // 2. Si no es reservada, la registra en la "Tabla de identificadores"
             tablaSimbolos.registrarIdentificador(yytext(), yyline+1, yycolumn+1);
             return token(yytext(),"IDENTIFICADOR",yyline,yycolumn);
         }             
