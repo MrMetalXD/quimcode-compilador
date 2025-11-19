@@ -191,7 +191,7 @@ public class Compilador extends javax.swing.JFrame {
             }
 
             DefaultTableModel tokens = new DefaultTableModel();
-            tokens.addColumn("#");
+            tokens.addColumn("# Linea");
             tokens.addColumn("Lexema");
             tokens.addColumn("Comp. Léxico");
 
@@ -212,7 +212,7 @@ public class Compilador extends javax.swing.JFrame {
 
                 if (compLexico != null && compLexico.startsWith("ERROR")) {
                     String sugerencia = obtenerSugerenciaError(compLexico, lexema);
-                    errores.append(String.format("Línea %d -> \"%s\" (%s)%n",linea, lexema, compLexico ));
+                    errores.append(String.format("Error en línea %d -> \"%s\" (%s)%n",linea, lexema, compLexico ));
 
                     if (sugerencia != null && !sugerencia.isEmpty()) {
                         errores.append("   Sugerencia: ")
@@ -227,10 +227,10 @@ public class Compilador extends javax.swing.JFrame {
             this.tablaDeFuncionesGlobal = lexer.getTablaFunciones();
             
             if (errores.length() > 0) {
-                jErrores.setText("Se encontraron errores léxicos:\n\n" + errores.toString());
+                jErrores.setText("Se encontraron errores léxicos:\n" + errores.toString());
                 return; // salimos
             } else {
-                jErrores.setText("ANALISIS LEXICO COMPLETADO SIN ERRORES");
+                jErrores.setText("\n -------- COMPILACION EXITOSA ------- ");
             }
 
             // Mostrar los resultados en una ventana aparte
@@ -259,7 +259,7 @@ public class Compilador extends javax.swing.JFrame {
 
             case "ERROR_IDENTIFICADOR_INVALIDO":
                 // Casos: 12ba, _8dato, __, etc.
-                return "El identificador no cumple las reglas del lenguaje. " +
+                return "El identificador no cumple con las reglas establecidas. " +
                        "Asegúrate de que:\n" +
                        "  - No comience con un dígito.\n" +
                        "  - Si empieza con '_', lo siga una letra (no dígitos ni más '_').\n" +
@@ -267,7 +267,7 @@ public class Compilador extends javax.swing.JFrame {
 
             case "ERROR_IDENTIFICADOR_ES_PALABRA_RESERVADA":
                 return "Estás usando una palabra reservada como identificador. " +
-                       "Cambia el nombre agregando un prefijo o sufijo, por ejemplo:\n" +
+                       "Cambia el nombre, por ejemplo:\n" +
                        "   \"" + lexema + "\"  ->  \"" + lexema + "_id\"";
 
             case "ERROR_CADENA_NO_CERRADA":
@@ -276,9 +276,10 @@ public class Compilador extends javax.swing.JFrame {
                        "   \"" + lexema + "\"  ->  \"" + lexema + "\"\"";
 
             case "ERROR_CARACTER_INVALIDO":
-                return "Hay un carácter que no forma parte del lenguaje definido. " +
+                return "Hay un carácter que no válido para el lenguaje. " +
                        "Revisa si escribiste un símbolo extraño o un acento que no es válido. " +
                        "Si no lo necesitas, elimínalo o sustitúyelo por un símbolo permitido.";
+            
             case "ERROR_NUMERO_MALFORMADO":
                 return "El numero esta mal formado o tiene caracteres invalidos. "+
                         "El numero debe estar escrito por uno o mas digitos, seguido de un punto y mas digitos" +
@@ -286,7 +287,7 @@ public class Compilador extends javax.swing.JFrame {
             case "ERROR":
             default:
                 return "Se encontró un símbolo no reconocido. " +
-                       "Verifica que la cadena esté bien escrito o elimínalo si no forma parte del lenguaje.";
+                       "Verifica que la cadena esté bien escrita o elimínalo.";
         }
     }
     
@@ -343,7 +344,7 @@ public class Compilador extends javax.swing.JFrame {
         //Crea y muestra la ventana (JDialog) con la tabla
         JTable tablaGUI = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(tablaGUI);
-        JDialog dialogoTabla = new JDialog(this, "Tabla de Símbolos (Identificadores)", true);
+        JDialog dialogoTabla = new JDialog(this, "Tabla de Variable (Identificadores)", true);
         dialogoTabla.add(scrollPane);
         dialogoTabla.setSize(600, 400);
         dialogoTabla.setLocationRelativeTo(this); // Centra la ventana
@@ -352,14 +353,15 @@ public class Compilador extends javax.swing.JFrame {
     
     private void VerTablaFija() {
         // Preparamos el modelo para la JTable
-        String[] columnas = {"Palabra Reservada"};
+        String[] columnas = {"Palabra Reservada", "Componente Léxico"};
         DefaultTableModel model = new DefaultTableModel(columnas, 0);
         //Obtiene la lista de palabras de la clase estática
         Set<String> palabras = TablaPalabrasReservadas.getPalabrasReservadas();
-        //Llena el modelo con los datos
         
+        //Llena el modelo con los datos
         for (String palabra : palabras) {
-            model.addRow(new Object[]{ palabra });
+            String componente = TablaPalabrasReservadas.getComponente(palabra);
+            model.addRow(new Object[]{ palabra, componente });
         }
         //Ordena la tabla alfabéticamente
         JTable tablaGUI = new javax.swing.JTable(model);
@@ -367,7 +369,7 @@ public class Compilador extends javax.swing.JFrame {
         
         //Crea y muestra la ventana (JDialog)
         JScrollPane scrollPane = new javax.swing.JScrollPane(tablaGUI);
-        JDialog dialogoTabla = new javax.swing.JDialog(this, "Tabla Fija (Palabras Reservadas)", true);
+        JDialog dialogoTabla = new javax.swing.JDialog(this, "Tabla Fija", true);
         dialogoTabla.add(scrollPane);
         dialogoTabla.setSize(400, 600);
         dialogoTabla.setLocationRelativeTo(this);
