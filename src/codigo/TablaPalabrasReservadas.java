@@ -14,65 +14,64 @@ public class TablaPalabrasReservadas {
     static {
         registrar("si", "PALABRA_RESERVADA");
         registrar("sino", "PALABRA_RESERVADA");
-        registrar("sino_si", "PALABRA_RESERVADA");
         registrar("fin_si", "PALABRA_RESERVADA");
         registrar("mientras", "PALABRA_RESERVADA");
-        registrar("hacer", "PALABRA_RESERVADA");
+        registrar("fin_mientras", "PALABRA_RESERVADA");
+        
         registrar("principal", "PALABRA_RESERVADA");
-        registrar("fin_principal", "PALABRA_RESERVADA");
-        registrar("elemento", "PALABRA_RESERVADA");
-        registrar("compuesto", "PALABRA_RESERVADA");
-        registrar("solucion", "PALABRA_RESERVADA");
-        registrar("moles", "PALABRA_RESERVADA");
-        registrar("peso", "PALABRA_RESERVADA");
-        registrar("estado", "PALABRA_RESERVADA");
-        registrar("solido", "PALABRA_RESERVADA");
-        registrar("liquido", "PALABRA_RESERVADA");
-        registrar("litro", "PALABRA_RESERVADA");
-        registrar("gaseoso", "PALABRA_RESERVADA");
-        registrar("acuoso", "PALABRA_RESERVADA");
-        registrar("reaccion", "PALABRA_RESERVADA");
-        registrar("agregar", "PALABRA_RESERVADA");
-        registrar("eliminar", "PALABRA_RESERVADA");
-        registrar("limpiar", "PALABRA_RESERVADA");
-        registrar("mezclar", "PALABRA_RESERVADA");
-        registrar("disolver", "PALABRA_RESERVADA");
-        registrar("precipitar", "PALABRA_RESERVADA");
-        registrar("evaporar", "PALABRA_RESERVADA");
-        registrar("destilar", "PALABRA_RESERVADA");
-        registrar("medir_ph", "PALABRA_RESERVADA");
-        registrar("medir_temp", "PALABRA_RESERVADA");
-        registrar("medir_presion", "PALABRA_RESERVADA");
-        registrar("agitar", "PALABRA_RESERVADA");
-        registrar("calentar", "PALABRA_RESERVADA");
-        registrar("enfriar", "PALABRA_RESERVADA");
-        registrar("neutralizar", "PALABRA_RESERVADA");
-        registrar("balancear_reaccion", "PALABRA_RESERVADA");
-        registrar("ejecutar_reaccion", "PALABRA_RESERVADA");
-        registrar("duracion", "PALABRA_RESERVADA");
-        registrar("mostrar", "PALABRA_RESERVADA");
-        registrar("mostrar_info", "PALABRA_RESERVADA");
-        registrar("enviar_alerta", "PALABRA_RESERVADA");
+        registrar("analisis_lexico", "PALABRA_RESERVADA");
+        registrar("analisis_sintactico", "PALABRA_RESERVADA");
+        
+        registrar("ignorar", "PALABRA_RESERVADA");
+        registrar("patron", "PALABRA_RESERVADA");
+        registrar("token", "PALABRA_RESERVADA");
+        
+        registrar("regla", "PALABRA_RESERVADA");
+        registrar("inicio", "PALABRA_RESERVADA");
+        registrar("vacio", "PALABRA_RESERVADA");
+        registrar("terminales", "PALABRA_RESERVADA");
+        registrar("no_terminales", "PALABRA_RESERVADA");
+        
+        registrar("entrada", "PALABRA_RESERVADA");
         registrar("imprimir", "PALABRA_RESERVADA");
+        registrar("arbol", "PALABRA_RESERVADA");
+        registrar("tokens", "PALABRA_RESERVADA");
+        registrar("dibujar", "PALABRA_RESERVADA");
+        registrar("cargar_archivo", "PALABRA_RESERVADA");
+        registrar("verificar_errores", "PALABRA_RESERVADA");
+        registrar("ver_errores", "PALABRA_RESERVADA");
+        registrar("limpiar_errores", "PALABRA_RESERVADA");
+        registrar("linea", "PALABRA_RESERVADA");
+        registrar("columna", "PALABRA_RESERVADA");
+        registrar("compilar", "PALABRA_RESERVADA");
+        registrar("seccion", "PALABRA_RESERVADA");
+        
         registrar("+", "OPE_ARITMETICO");
         registrar("-", "OPE_ARITMETICO");
         registrar("*", "OPE_ARITMETICO");
         registrar("/", "OPE_ARITMETICO");
+        
         registrar("=", "OPE_ASIGNACION");
+        
         registrar("==", "OPE_RELACIONAL");
         registrar("!=", "OPE_RELACIONAL");
         registrar("<", "OPE_RELACIONAL");
         registrar(">", "OPE_RELACIONAL");
         registrar("<=", "OPE_RELACIONAL");
         registrar(">=", "OPE_RELACIONAL");
+        
         registrar("&&", "OPE_LOGICO");
         registrar("||", "OPE_LOGICO");
         registrar("!", "OPE_LOGICO");
+        
         registrar("(", "DELIMITADOR");
         registrar(")", "DELIMITADOR");
         registrar("{", "DELIMITADOR");
         registrar("}", "DELIMITADOR");
         registrar(";", "DELIMITADOR");
+        registrar(",", "DELIMITADOR");
+        registrar(":", "DELIMITADOR");
+        registrar("|", "DELIMITADOR");
     }
 
     private static void registrar(String lexema, String componente) {
