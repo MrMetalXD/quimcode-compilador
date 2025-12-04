@@ -1,0 +1,70 @@
+compilar MiniVariables {
+
+    # Análisis Léxico
+    seccion analisis_lexico {
+
+        ignorar: "[ \t\n]+";
+
+        patron DIGITO = "[0-9]";
+        patron LETRA  = "[a-zA-Z]";
+
+        # Palabras reservadas
+        token VAR     = "var";
+        token PRINT   = "print";
+        token END     = "end";
+
+        token ID      = LETRA(LETRA|DIGITO)*;
+        token NUM     = DIGITO+;
+        token ASIG    = "=";
+        token PCOMA   = ";";
+
+        # Error léxico
+        token ERROR = ".";
+    }
+
+    # Análisis Sintáctico
+    seccion analisis_sintactico {
+
+        terminales: VAR, PRINT, END, ID, NUM, ASIG, PCOMA;
+        no_terminales: Programa, Instruccion;
+
+        inicio: Programa;
+
+        regla Programa: Instruccion Programa | END ;
+        regla Instruccion: VAR ID ASIG NUM PCOMA | PRINT ID PCOMA ;
+    }
+
+    # Bloque Principal
+    seccion principal {
+
+        entrada codigo = (
+            "var x = 10;
+             var y = 5;
+             print x;
+             end"
+        );
+
+        tokens t = analisis_lexico(codigo);
+
+        si (verificar_errores t)
+            imprimir("Error léxico en línea " + linea(t) +
+                     ", columna " + columna(t));
+            ver_errores t;
+            limpiar_errores t;
+        sino
+
+            arbol a = analisis_sintactico(codigo);
+
+            si (verificar_errores a)
+                imprimir("Error sintáctico en línea " + linea(a));
+                ver_errores a;
+                limpiar_errores a;
+            sino
+                imprimir( "Programa válido");
+                imprimir("Árbol sintáctico:");
+                dibujar(a);
+            fin_si
+
+        fin_si
+    }
+}
