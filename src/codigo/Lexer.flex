@@ -70,7 +70,24 @@ COMENTARIO = \#.*
 "ver_errores"|
 "limpiar_errores"|
 "compilar"|
-"seccion" {return token(yytext(),"PALABRA_RESERVADA",yyline,yycolumn); }
+"seccion" | 
+"definir_alfabeto"|
+"conjunto"|
+"definir_token"
+"palabras_reservadas"|
+"ejecutar_automata"|
+"estados"|
+"estado_inicial"|
+"estados_finales"|
+"transiciones"
+"otro"|
+"campo"|
+"estructura_tabla"|
+"tabla"|
+"tabla_simbolos"|
+"construir_tabla"|
+"generar_TablaSimbolos"|
+"ejecutarProg" {return token(yytext(),"PALABRA_RESERVADA",yyline,yycolumn); }
 
 "+"|
 "*" { return token(yytext(),"OPE_ARITMETICO",yyline,yycolumn); }
@@ -83,6 +100,7 @@ COMENTARIO = \#.*
 ">" { return token(yytext(),"OPE_RELACIONAL",yyline,yycolumn); }
 
 "=" { return token(yytext(),"OPE_ASIGNACION",yyline,yycolumn); }
+"=>" { return token(yytext(),"OPE_TRANSICION",yyline,yycolumn); }
 
 "&&"|
 "||"|
@@ -96,7 +114,7 @@ COMENTARIO = \#.*
 "]"|
 "|"| 
 ";"|
-"," 
+","| 
 ":" { return token(yytext(),"DELIMITADOR",yyline,yycolumn); }
 
 
